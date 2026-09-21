@@ -1,4 +1,5 @@
 import math
+import argparse
 
 
 def E(x, n=1000):
@@ -19,8 +20,36 @@ def E(x, n=1000):
     return h * total
 
 
-# Part (a)
-# Calculate E(x) for x = 0, 0.1, 0.2, ..., 3.0
+# Set up command-line arguments
+parser = argparse.ArgumentParser(
+    description="Calculate E(x) using the trapezoidal rule."
+)
+
+parser.add_argument(
+    "--max-x",
+    type=float,
+    default=3.0,
+    help="Maximum x value (default: 3.0)"
+)
+
+parser.add_argument(
+    "--step",
+    type=float,
+    default=0.1,
+    help="Step size for x values (default: 0.1)"
+)
+
+parser.add_argument(
+    "--n",
+    type=int,
+    default=1000,
+    help="Number of trapezoids (default: 1000)"
+)
+
+args = parser.parse_args()
+
+
+# Calculate E(x) for the specified range
 
 x_values = []
 E_values = []
@@ -28,17 +57,19 @@ E_values = []
 print("   x          E(x)")
 print("----------------------")
 
-for i in range(31):
-    x = i * 0.1
-    value = E(x)
+x = 0.0
+
+while x <= args.max_x + 1e-10:
+    value = E(x, args.n)
 
     x_values.append(x)
     E_values.append(value)
 
     print(f"{x:5.1f}     {value:.8f}")
 
+    x += args.step
 
-# Part (b)
+
 # Make a simple graph using characters in the terminal
 
 print("\nGraph of E(x)")
@@ -52,3 +83,4 @@ for x, value in zip(x_values, E_values):
     number_of_stars = int((value / max_value) * graph_width)
 
     print(f"{x:3.1f} | {'*' * number_of_stars}")
+
